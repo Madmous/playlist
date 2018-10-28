@@ -14,7 +14,7 @@ def create_video(playlist_id, title, thumbnail, db):
     playlist_repository.update_playlist_video_position(
         playlist_id, position, db)
     video_repository.create_video(playlist_id, title, thumbnail, position, db)
-    return HTTPResponse(status=201)
+    return HTTPResponse(status=200, body={'status': 'OK'})
 
 
 @get('/videos/<playlist_id>')
@@ -22,7 +22,7 @@ def retrieve_videos(playlist_id, db):
     rows = video_repository.retrieve_videos(playlist_id, db)
     return HTTPResponse(
         status=200,
-        body={'data': rows})
+        body={'status': 'OK', 'data': rows})
 
 
 @put('/videos/<id>')
@@ -38,4 +38,4 @@ def delete_video(id, playlist_id, db):
         playlist_id, position, db)
     video = video_repository.delete_video(id, db)
     video_repository.update_video_positions(video['position'], db)
-    return HTTPResponse(status=200)
+    return HTTPResponse(status=200, body={'status': 'OK'})

@@ -13,31 +13,39 @@ def retrieve_playlist(db):
     rows = playlist_repository.retrieve_playlists(db)
     return HTTPResponse(
         status=200,
-        body={'data': rows})
+        body={'status': 'OK', 'data': rows})
 
 
 @get('/playlists/<id>')
 def retrieve_playlist_by_id(id, db):
-    rows = playlist_repository.retrieve_playlist_by_id(id, db)
+    row = playlist_repository.retrieve_playlist_by_id(id, db)
     return HTTPResponse(
         status=200,
-        body={'data': rows})
+        body={'status': 'OK', 'data': row})
 
 
 @post('/playlists/<name>')
 def create_playlist(name, db):
     playlist_repository.create_playlist(name, db)
-    return HTTPResponse(status=201)
+    return HTTPResponse(status=200, body={'status': 'OK'})
 
 
 @put('/playlists/<id>/<name>')
 def update_playlist(id, name, db):
-    playlist_repository.update_playlist(id, name, db)
-    return HTTPResponse(status=200)
+    row = playlist_repository.retrieve_playlist_by_id(id, db)
+    if (row == None):
+        return HTTPResponse(status=200, body={'status': 'NOK', 'message': 'You can not update this playlist. It does not exist'})
+    else:
+        playlist_repository.update_playlist(id, name, db)
+        return HTTPResponse(status=200, body={'status': 'OK'})
 
 
 @delete('/playlists/<id>')
 def delete_playlist(id, db):
-    playlist_repository.delete_playlist(id, db)
-    video_repository.delete_playlists_videos(id, db)
-    return HTTPResponse(status=200)
+    row = playlist_repository.retrieve_playlist_by_id(id, db)
+    if (row == None):
+        return HTTPResponse(status=200, body={'status': 'NOK', 'message': 'You can not delete this playlist. It does not exist'})
+    else:
+        playlist_repository.delete_playlist(id, db)
+        video_repository.delete_playlists_videos(id, db)
+        return HTTPResponse(status=200, body={'status': 'OK'})

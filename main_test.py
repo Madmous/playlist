@@ -51,7 +51,7 @@ def test_should_return_all_playlists():
     create_playlist('second playlist')
 
     response = test_app.get('/playlists')
-    assert response.status == '200 OK'
+    assert response.json['status'] == 'OK'
     assert response.json['data'] == [dict(id=1, name='first playlist'),
                                      dict(id=2, name='second playlist')]
 
@@ -62,7 +62,7 @@ def test_should_return_a_playlist():
     create_playlist('first playlist')
 
     response = test_app.get('/playlists/1')
-    assert response.status == '200 OK'
+    assert response.json['status'] == 'OK'
     assert response.json['data'] == dict(
         id=1, name='first playlist', video_position=0)
 
@@ -71,10 +71,10 @@ def test_should_create_a_playlist():
     populate_test_database()
 
     response = test_app.post('/playlists/nn')
-    assert response.status == '201 Created'
+    assert response.json['status'] == 'OK'
 
     response2 = test_app.get('/playlists')
-    assert response2.status == '200 OK'
+    assert response2.json['status'] == 'OK'
     assert response2.json['data'] == [dict(id=1, name='nn')]
 
 
@@ -82,12 +82,13 @@ def test_should_update_a_playlist_name():
     populate_test_database()
 
     response = test_app.post('/playlists/nn')
-    assert response.status == '201 Created'
+    assert response.json['status'] == 'OK'
 
     response2 = test_app.put('/playlists/1/name')
-    assert response2.status == '200 OK'
+    assert response2.json['status'] == 'OK'
 
     response3 = test_app.get('/playlists')
+    assert response3.json['status'] == 'OK'
     assert response3.json['data'] == [dict(id=1, name='name')]
 
 
@@ -101,14 +102,14 @@ def test_should_delete_a_playlist_and_remove_all_its_videos():
                  'the url of the video', 2)
 
     response = test_app.delete('/playlists/1')
-    assert response.status == '200 OK'
+    assert response.json['status'] == 'OK'
 
     response2 = test_app.get('/playlists/1')
-    assert response2.status == '200 OK'
+    assert response2.json['status'] == 'OK'
     assert response2.json['data'] == None
 
     response3 = test_app.get('/videos/1')
-    assert response3.status == '200 OK'
+    assert response3.json['status'] == 'OK'
     assert response3.json['data'] == []
 
 
@@ -122,7 +123,7 @@ def test_should_return_all_the_videos():
                  'the url of the video', 2)
 
     response = test_app.get('/videos/1')
-    assert response.status == '200 OK'
+    assert response.json['status'] == 'OK'
     assert response.json['data'] == [dict(id=1, title='the title of the video',
                                           thumbnail='the url of the video', position=1),
                                      dict(id=2, title='the title of the video',
@@ -135,14 +136,14 @@ def test_should_create_a_video():
     create_playlist('first playlist')
 
     response = test_app.post('/videos/1/title/thumbnail')
-    assert response.status == '201 Created'
+    assert response.json['status'] == 'OK'
 
-    response = test_app.post('/videos/1/title2/thumbnail2')
-    assert response.status == '201 Created'
+    response2 = test_app.post('/videos/1/title2/thumbnail2')
+    assert response2.json['status'] == 'OK'
 
-    response2 = test_app.get('/videos/1')
-    assert response2.status == '200 OK'
-    assert response2.json['data'] == [dict(id=1, title='title', thumbnail='thumbnail', position=1),
+    response3 = test_app.get('/videos/1')
+    assert response3.json['status'] == 'OK'
+    assert response3.json['data'] == [dict(id=1, title='title', thumbnail='thumbnail', position=1),
                                       dict(id=2, title='title2', thumbnail='thumbnail2', position=2)]
 
 
@@ -152,18 +153,18 @@ def test_should_delete_a_video_given_an_id_and_update_playlist_video_position():
     create_playlist('first playlist')
 
     response = test_app.post('/videos/1/title/thumbnail')
-    assert response.status == '201 Created'
+    assert response.json['status'] == 'OK'
 
     response2 = test_app.delete('/videos/1/1')
-    assert response2.status == '200 OK'
+    assert response2.json['status'] == 'OK'
 
     response3 = test_app.get('/videos/1')
-    assert response3.status == '200 OK'
+    assert response3.json['status'] == 'OK'
     assert response3.json['data'] == []
 
     response4 = test_app.get('/playlists/1')
 
-    assert response4.status == '200 OK'
+    assert response4.json['status'] == 'OK'
     assert response4.json['data'] == dict(
         id=1, name='first playlist', video_position=0)
 
@@ -174,24 +175,43 @@ def test_should_reorder_video_position_given_a_deleted_video():
     create_playlist('first playlist')
 
     response = test_app.post('/videos/1/title/thumbnail')
-    assert response.status == '201 Created'
+    assert response.json['status'] == 'OK'
 
-    response = test_app.post('/videos/1/title2/thumbnail2')
-    assert response.status == '201 Created'
+    response2 = test_app.post('/videos/1/title2/thumbnail2')
+    assert response2.json['status'] == 'OK'
 
-    response = test_app.post('/videos/1/title3/thumbnail3')
-    assert response.status == '201 Created'
+    response3 = test_app.post('/videos/1/title3/thumbnail3')
+    assert response3.json['status'] == 'OK'
 
-    deleteResponse = test_app.delete('/videos/2/1')
-    assert deleteResponse.status == '200 OK'
+    response4 = test_app.delete('/videos/2/1')
+    assert response4.json['status'] == 'OK'
 
-    retrieveVideosResponse = test_app.get('/videos/1')
-    assert retrieveVideosResponse.status == '200 OK'
-    assert retrieveVideosResponse.json['data'] == [dict(id=1, title='title', thumbnail='thumbnail', position=1),
-                                                   dict(id=3, title='title3', thumbnail='thumbnail3', position=2)]
+    response5 = test_app.get('/videos/1')
+    assert response.json['status'] == 'OK'
+    assert response5.json['data'] == [dict(id=1, title='title', thumbnail='thumbnail', position=1),
+                                      dict(id=3, title='title3', thumbnail='thumbnail3', position=2)]
 
-    retrievePlaylistResponse = test_app.get('/playlists/1')
-
-    assert retrievePlaylistResponse.status == '200 OK'
-    assert retrievePlaylistResponse.json['data'] == dict(
+    response6 = test_app.get('/playlists/1')
+    assert response6.json['status'] == 'OK'
+    assert response6.json['data'] == dict(
         id=1, name='first playlist', video_position=2)
+
+
+def test_should_return_a_not_ok_status_when_deleting_an_unknown_playlist_id():
+    populate_test_database()
+
+    create_playlist('first playlist')
+
+    response = test_app.delete('/playlists/2')
+    assert response.json['status'] == 'NOK'
+    assert response.json['message'] != None
+
+
+def test_should_return_a_not_ok_status_when_updating_an_unknown_playlist_id():
+    populate_test_database()
+
+    create_playlist('first playlist')
+
+    response = test_app.put('/playlists/2/name')
+    assert response.json['status'] == 'NOK'
+    assert response.json['message'] != None
