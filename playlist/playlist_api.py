@@ -2,13 +2,14 @@
 
 from bottle import request, response, post, get, put, delete, HTTPResponse
 from playlist import playlist_repository
+from video import video_repository
 
 from logging import getLogger
 logger = getLogger()
 
 
 @get('/playlists')
-def retrieve_plaulist(db):
+def retrieve_playlist(db):
     rows = playlist_repository.retrieve_playlists(db)
     return HTTPResponse(
         status=200,
@@ -16,7 +17,7 @@ def retrieve_plaulist(db):
 
 
 @get('/playlists/<id>')
-def retrieve_plaulist(id, db):
+def retrieve_playlist_by_id(id, db):
     rows = playlist_repository.retrieve_playlist_by_id(id, db)
     return HTTPResponse(
         status=200,
@@ -38,4 +39,5 @@ def update_playlist(id, name, db):
 @delete('/playlists/<id>')
 def delete_playlist(id, db):
     playlist_repository.delete_playlist(id, db)
+    video_repository.delete_playlists_videos(id, db)
     return HTTPResponse(status=200)

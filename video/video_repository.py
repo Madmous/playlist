@@ -1,21 +1,28 @@
+"""This module does blah blah."""
 
-# - Return the list of all videos from a playlist (ordered by position)
-
-# - Add a video in a playlist
-
-# - Delete a video from a playlist
-# Removing videos should re-arrange the order of your playlist and the storage.
-
-# evolve model: add playlist id
 
 def retrieve_videos(playlist_id, db):
-    db.execute("SELECT id, title, thumbnail from video WHERE playlist_id={playlist_id} ORDER BY position ASC;".format(playlist_id=playlist_id))
+    db.execute("SELECT id, title, thumbnail, position from video WHERE playlist_id={playlist_id} ORDER BY position ASC;".format(
+        playlist_id=playlist_id))
     rows = db.fetchall()
     return rows
 
 
+def retrieve_video_position(id, db):
+    db.execute("SELECT id, position from video WHERE id={id};".format(id=id))
+    row = db.fetchone()
+    return row
+
+
 def delete_video(id, db):
+    video = retrieve_video_position(id, db)
     db.execute("DELETE FROM video where id={id};".format(id=id))
+    return video
+
+
+def delete_playlists_videos(playlist_id, db):
+    db.execute("DELETE FROM video where playlist_id={playlist_id};".format(
+        playlist_id=playlist_id))
 
 
 def create_video(playlist_id, title, thumbnail, position, db):
@@ -24,4 +31,6 @@ def create_video(playlist_id, title, thumbnail, position, db):
             playlist_id=playlist_id, title=title, thumbnail=thumbnail, position=position))
 
 
-
+def update_video_positions(removed_position, db):
+    db.execute("UPDATE video SET position = position - 1 WHERE position > {removed_position}".format(
+        removed_position=removed_position))
