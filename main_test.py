@@ -15,7 +15,7 @@ from database import populate_test_database
 logger = getLogger()
 
 app = bottle.default_app()
-plugin = Plugin(dbuser='root', dbpass=os.environ["PASSWORD"], dbname='test')
+plugin = Plugin(dbuser=os.environ["USER"], dbpass=os.environ["PASSWORD"], dbname='test')
 app.install(plugin)
 test_app = webtest.TestApp(app)
 

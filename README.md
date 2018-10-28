@@ -1,107 +1,93 @@
-Building a playlist api
-Indicative estimated duration : 3h00
+# Requirements
 
-Introduction
+- MySQL
+- Miniconda
 
-Dailymotion is building a new feature "The playlist"
+# Installation
 
-The feature is simple : The user can create a list of ordered videos.
+- conda create -n playlist
+- pip install -r requirements.txt
 
-As a core api developer, you are responsible for building this feature and expose it through API.
+# Run tests
 
-Task
-The task is to create an api that manages an ordered playlist.
-An example of a minimal video model : (You might add extra fields to do this project)
+- mysql.server start
+- USER='fill in your db user' PASSWORD='fill in your db password' py.test main_test.py
 
-video {
-id : the id of the video,
-title: the title of the video
-thumbnail : The url of the video
-...
-}
+# Start API server
 
-An example of a minimal playlist model : (You might add extra fields to do this project)
+- mysql.server start
+- USER='fill in your db user' PASSWORD='fill in your db password' python main.py
 
-playlist {
-id : The id of the playlist,
-name : The name of the playlist
-......
-}
+When the api server starts, it creates a database called daily_motion and two tables (playlist and video).
 
-The API must support the following use cases:
+## Playlist
 
-- Return the list of all videos:
+### Create a playlist
 
-{
-"data" : [
-{
-"id": 1,
-"title": "video 1"
-....
-},
-{
-"id": 2,
-"title": "video 2"
-}
-....
-]
-}
+```bash
+curl -X POST \http://localhost:8080/playlists/first%playlist
+```
 
-- Return the list of all playlists:
+### Update a playlist
 
-{
-"data" : [
-{
-"id": 1,
-"name": "playlist 1"
-....
-},
-{
-"id": 2,
-"name": "playlist 2"
-}
-….
+```bash
+curl -X PUT \http://localhost:8080/playlists/1/first
+```
 
-]
-}
+### Return the list of all playlists
 
-- Create a playlist
+```bash
+curl -X GET \http://localhost:8080/playlists
+```
 
-- Show informations about the playlist
+### Return one playlist
 
-{
-"data" : {
-"id": 1,
-"name": "playlist 1"
-}
-}
+```bash
+curl -X GET \http://localhost:8080/playlists/1
+```
 
-- Update informations about the playlist
-- Delete the playlist
-- Add a video in a playlist
-- Delete a video from a playlist
-- Return the list of all videos from a playlist (ordered by position):
+### Delete a playlist
 
-{
-"data" : [
-{
-"id": 1,
-"title": "video 1 from playlist 2"
-....
-},
-{
-"id": 2,
-"title": "video 2 from playlist 2"
-}
-....
-]
-}
+```bash
+curl -X DELETE \http://localhost:8080/playlists/1
+```
 
-Your goal: Design and build this API.
+### Add a video to a playlist
 
-Important notes :
-- Removing videos should re-arrange the order of your playlist and the storage.
-- Python languages are supported
-- Using frameworks is forbidden, your code should use native language libraries, except for Python, you could use bottlepy ( https://bottlepy.org/docs/dev/).
-- Use Mysql for storing your data
-- You should provide us the source code (or a link to GitHub) and the instructions to run your code
+```bash
+curl -X POST \http://localhost:8080/videos/1/title/thumbnail
+```
+
+## Video
+
+### Update a video position
+
+```bash
+curl -X PUT \http://localhost:8080/videos/1/1/2
+```
+
+### Return the list of all videos
+
+```bash
+curl -X GET \http://localhost:8080/videos
+```
+
+### Return the list of all videos of a playlist
+
+```bash
+curl -X GET \http://localhost:8080/videos/1
+```
+
+### Delete a video
+
+```bash
+curl -X DELETE \http://localhost:8080/videos/1/1
+```
+
+# Improvements
+
+- Separate playlists and videos tests into different modules
+- Handle database changes like tables changes
+- Handle 500 errors due to Database IOs (try catch)
+- Authentication
+- Query params

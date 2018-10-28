@@ -11,8 +11,8 @@ from database import create_schema_if_necessary
 
 app = default_app()
 db_name = 'daily_motion'
-plugin = Plugin(
-    dbuser='root', dbpass=os.environ["PASSWORD"], dbname=db_name)
+plugin = Plugin(dbuser=os.environ["USER"],
+                dbpass=os.environ["PASSWORD"], dbname=db_name)
 app.install(plugin)
 
 if __name__ == '__main__':
