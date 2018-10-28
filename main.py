@@ -10,7 +10,7 @@ from video import video_api
 from database import create_schema_if_necessary
 
 app = default_app()
-db_name = 'daily_motion'
+db_name = os.environ["DB"]
 plugin = Plugin(dbuser=os.environ["USER"],
                 dbpass=os.environ["PASSWORD"], dbname=db_name)
 app.install(plugin)

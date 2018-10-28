@@ -25,7 +25,7 @@ When the api server starts, it creates a database called daily_motion and two ta
 ### Create a playlist
 
 ```bash
-curl -X POST \http://localhost:8080/playlists/first%playlist
+curl -X POST \http://localhost:8080/playlists/first%20playlist
 ```
 
 ### Update a playlist

@@ -4,7 +4,6 @@ import webtest
 import MySQLdb
 import os
 
-from logging import getLogger
 from bottle_mysql import Plugin
 
 from video import video_api
@@ -12,11 +11,9 @@ from playlist import playlist_api
 
 from database import populate_test_database
 
-logger = getLogger()
-
 app = bottle.default_app()
-plugin = Plugin(dbuser=os.environ["USER"],
-                dbpass=os.environ["PASSWORD"], dbname='test')
+plugin = Plugin(
+    dbuser=os.environ["USER"], dbpass=os.environ["PASSWORD"], dbname=os.environ["DB"])
 app.install(plugin)
 test_app = webtest.TestApp(app)
 
@@ -40,7 +37,8 @@ def create_playlist(name):
 
 
 def connect_to_database():
-    db = MySQLdb.connect("localhost", "root", os.environ["PASSWORD"], 'test')
+    db = MySQLdb.connect(
+        "localhost", os.environ["USER"], os.environ["PASSWORD"], os.environ["DB"])
     return db
 
 
