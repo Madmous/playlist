@@ -29,9 +29,11 @@ def retrieve_videos(playlist_id, db):
         body={'status': 'OK', 'data': rows})
 
 
-@put('/videos/<id>')
-def update_video_position(id):
-    pass
+@put('/videos/<id>/<next_position>')
+def update_video_position(id, next_position, db):
+    video = video_repository.retrieve_video(id, db)
+    video_repository.update_video_position(id, video['position'], next_position, db)
+    return HTTPResponse(status=200, body={'status': 'OK'})
 
 
 @delete('/videos/<id>/<playlist_id>')
@@ -40,7 +42,7 @@ def delete_video(id, playlist_id, db):
     if (playlist == None):
         return HTTPResponse(status=200, body={'status': 'NOK', 'message': 'You can not delete this. It does not exist'})
 
-    video = video_repository.retrieve_video_position(id, db)
+    video = video_repository.retrieve_video(id, db)
 
     if (video == None):
         return HTTPResponse(status=200, body={'status': 'NOK', 'message': 'You can not delete this. this video is not part of this playlist'})

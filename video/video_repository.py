@@ -1,6 +1,7 @@
 """This module does blah blah."""
 # update video position ???
 
+
 def retrieve_videos(playlist_id, db):
     db.execute("SELECT id, title, thumbnail, position from video WHERE playlist_id={playlist_id} ORDER BY position ASC;".format(
         playlist_id=playlist_id))
@@ -8,7 +9,7 @@ def retrieve_videos(playlist_id, db):
     return rows
 
 
-def retrieve_video_position(id, db):
+def retrieve_video(id, db):
     db.execute("SELECT id, position from video WHERE id={id};".format(id=id))
     row = db.fetchone()
     return row
@@ -32,3 +33,8 @@ def create_video(playlist_id, title, thumbnail, position, db):
 def update_video_positions(removed_position, db):
     db.execute("UPDATE video SET position = position - 1 WHERE position > {removed_position}".format(
         removed_position=removed_position))
+
+
+def update_video_position(id, position, next_position, db):
+    db.execute("UPDATE video SET position = Case position When {position} Then {next_position} Else position + 1 End WHERE position BETWEEN {next_position} AND {position};".format(
+        position=position, next_position=next_position))
