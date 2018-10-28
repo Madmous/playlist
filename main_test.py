@@ -215,3 +215,40 @@ def test_should_return_a_not_ok_status_when_updating_an_unknown_playlist_id():
     response = test_app.put('/playlists/2/name')
     assert response.json['status'] == 'NOK'
     assert response.json['message'] != None
+
+
+def test_should_return_a_not_ok_status_when_creating_a_video_from_an_unknown_playlist_id():
+    populate_test_database()
+
+    create_playlist('first playlist')
+
+    response = test_app.post('/videos/2/title/thumbnail')
+
+    assert response.json['status'] == 'NOK'
+    assert response.json['message'] != None
+
+
+def test_should_return_a_not_ok_status_when_deleting_a_video_from_an_unknown_playlist_id():
+    populate_test_database()
+
+    create_playlist('first playlist')
+
+    response = test_app.post('/videos/1/title/thumbnail')
+    assert response.json['status'] == 'OK'
+
+    response = test_app.delete('/videos/1/2')
+    assert response.json['status'] == 'NOK'
+    assert response.json['message'] != None
+
+
+def test_should_return_a_not_ok_status_when_deleting_a_video_not_from_a_given_playlist():
+    populate_test_database()
+
+    create_playlist('first playlist')
+
+    response = test_app.post('/videos/1/title/thumbnail')
+    assert response.json['status'] == 'OK'
+
+    response = test_app.delete('/videos/2/1')
+    assert response.json['status'] == 'NOK'
+    assert response.json['message'] != None

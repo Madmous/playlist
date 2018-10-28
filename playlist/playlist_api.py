@@ -35,9 +35,9 @@ def update_playlist(id, name, db):
     row = playlist_repository.retrieve_playlist_by_id(id, db)
     if (row == None):
         return HTTPResponse(status=200, body={'status': 'NOK', 'message': 'You can not update this playlist. It does not exist'})
-    else:
-        playlist_repository.update_playlist(id, name, db)
-        return HTTPResponse(status=200, body={'status': 'OK'})
+
+    playlist_repository.update_playlist(id, name, db)
+    return HTTPResponse(status=200, body={'status': 'OK'})
 
 
 @delete('/playlists/<id>')
@@ -45,7 +45,7 @@ def delete_playlist(id, db):
     row = playlist_repository.retrieve_playlist_by_id(id, db)
     if (row == None):
         return HTTPResponse(status=200, body={'status': 'NOK', 'message': 'You can not delete this playlist. It does not exist'})
-    else:
-        playlist_repository.delete_playlist(id, db)
-        video_repository.delete_playlists_videos(id, db)
-        return HTTPResponse(status=200, body={'status': 'OK'})
+
+    playlist_repository.delete_playlist(id, db)
+    video_repository.delete_playlists_videos(id, db)
+    return HTTPResponse(status=200, body={'status': 'OK'})

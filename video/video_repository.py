@@ -1,5 +1,5 @@
 """This module does blah blah."""
-
+# update video position ???
 
 def retrieve_videos(playlist_id, db):
     db.execute("SELECT id, title, thumbnail, position from video WHERE playlist_id={playlist_id} ORDER BY position ASC;".format(
@@ -15,9 +15,7 @@ def retrieve_video_position(id, db):
 
 
 def delete_video(id, db):
-    video = retrieve_video_position(id, db)
     db.execute("DELETE FROM video where id={id};".format(id=id))
-    return video
 
 
 def delete_playlists_videos(playlist_id, db):
