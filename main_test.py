@@ -24,8 +24,7 @@ def create_video(playlist_id, title, thumbnail, position):
     db = connect_to_database()
     cursor = db.cursor()
     cursor.execute(
-        "INSERT INTO video (playlist_id, title, thumbnail, position) VALUES('{playlist_id}', '{title}', '{thumbnail}', '{position}');".format(
-            playlist_id=playlist_id, title=title, thumbnail=thumbnail, position=position))
+        "INSERT INTO video (playlist_id, title, thumbnail, position) VALUES(%s, %s, %s, %s);", (playlist_id, title, thumbnail, position,))
     db.commit()
     db.close()
 
@@ -34,7 +33,7 @@ def create_playlist(name):
     db = connect_to_database()
     cursor = db.cursor()
     cursor.execute(
-        "INSERT INTO playlist (name, video_position) VALUES('{name}', 0);".format(name=name))
+        "INSERT INTO playlist (name, video_position) VALUES(%s, 0);", (name,))
     db.commit()
     db.close()
 
