@@ -1,0 +1,7 @@
+bottle
+pytest==3.7.0
+pytest-cache
+pylint
+bottle_mysql
+webtest
+mysqlclient
