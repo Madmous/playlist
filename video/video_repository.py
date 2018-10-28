@@ -9,10 +9,17 @@ def retrieve_videos(playlist_id, db):
     return rows
 
 
-def retrieve_video(id, db):
-    db.execute("SELECT id, position from video WHERE id={id};".format(id=id))
+def retrieve_video(id, playlist_id, db):
+    db.execute("SELECT id, position from video WHERE id={id} and playlist_id={playlist_id};".format(
+        id=id, playlist_id=playlist_id))
     row = db.fetchone()
     return row
+
+
+def retrieve_last_video_position(playlist_id, db):
+    db.execute("SELECT max(position) as position from video WHERE playlist_id={playlist_id};".format(playlist_id=playlist_id))
+    row = db.fetchone()
+    return row['position']
 
 
 def delete_video(id, db):

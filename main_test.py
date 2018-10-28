@@ -157,7 +157,7 @@ def test_should_update_a_video_position():
     create_video(1, 'title3', 'thumbnail3', 3)
     create_video(1, 'title4', 'thumbnail4', 4)
 
-    response = test_app.put('/videos/4/2')
+    response = test_app.put('/videos/4/1/2')
     assert response.json['status'] == 'OK'
 
     response2 = test_app.get('/videos/1')
@@ -249,6 +249,29 @@ def test_should_return_a_not_ok_status_when_creating_a_video_from_an_unknown_pla
 
     assert response.json['status'] == 'NOK'
     assert response.json['message'] != None
+
+
+def test_should_return_a_not_ok_status_when_updating_a_video_from_an_unknown_id():
+    populate_test_database()
+
+    response = test_app.put('/videos/1/1/2')
+    assert response.json['status'] == 'NOK'
+    assert response.json['message'] != None
+
+
+def test_should_return_a_not_ok_status_when_either_specifying_an_out_of_bounds_or_similar_position():
+    populate_test_database()
+
+    create_video(1, 'title', 'thumbnail', 1)
+    create_video(1, 'title2', 'thumbnail2', 2)
+
+    response = test_app.put('/videos/1/1/2')
+    assert response.json['status'] == 'NOK'
+    assert response.json['message'] != None
+
+    response2 = test_app.put('/videos/1/1/5')
+    assert response2.json['status'] == 'NOK'
+    assert response2.json['message'] != None
 
 
 def test_should_return_a_not_ok_status_when_deleting_a_video_from_an_unknown_playlist_id():

@@ -33,7 +33,7 @@ def create_playlist(name, db):
 @put('/playlists/<id>/<name>')
 def update_playlist(id, name, db):
     row = playlist_repository.retrieve_playlist_by_id(id, db)
-    if (row == None):
+    if row == None:
         return HTTPResponse(status=200, body={'status': 'NOK', 'message': 'You can not update this playlist. It does not exist'})
 
     playlist_repository.update_playlist(id, name, db)
@@ -43,7 +43,7 @@ def update_playlist(id, name, db):
 @delete('/playlists/<id>')
 def delete_playlist(id, db):
     row = playlist_repository.retrieve_playlist_by_id(id, db)
-    if (row == None):
+    if row == None:
         return HTTPResponse(status=200, body={'status': 'NOK', 'message': 'You can not delete this playlist. It does not exist'})
 
     playlist_repository.delete_playlist(id, db)
