@@ -52,10 +52,10 @@ def update_video_position(id, playlist_id, next_position, db):
 
     if position > next_position:
         video_repository.move_up_video_position(
-            id, position, next_position, db)
+            id, playlist_id, position, next_position, db)
         return HTTPResponse(status=200, body={'status': 'OK'})
 
-    video_repository.drop_down_video_position(id, position, next_position, db)
+    video_repository.drop_down_video_position(id, playlist_id, position, next_position, db)
     return HTTPResponse(status=200, body={'status': 'OK'})
 
 
