@@ -15,7 +15,8 @@ from database import populate_test_database
 logger = getLogger()
 
 app = bottle.default_app()
-plugin = Plugin(dbuser=os.environ["USER"], dbpass=os.environ["PASSWORD"], dbname='test')
+plugin = Plugin(dbuser=os.environ["USER"],
+                dbpass=os.environ["PASSWORD"], dbname='test')
 app.install(plugin)
 test_app = webtest.TestApp(app)
 
@@ -176,27 +177,38 @@ def test_should_create_a_video():
                                       dict(id=2, title='title2', thumbnail='thumbnail2', position=2)]
 
 
-def test_should_update_a_video_position():
+def test_should_drop_down_a_video_position():
     populate_test_database()
 
     create_playlist('first playlist')
 
     create_video(1, 'title', 'thumbnail', 1)
     create_video(1, 'title2', 'thumbnail2', 2)
-    create_video(1, 'title3', 'thumbnail3', 3)
-    create_video(1, 'title4', 'thumbnail4', 4)
 
-    response = test_app.put('/videos/4/1/2')
+    response = test_app.put('/videos/1/1/2')
     assert response.json['status'] == 'OK'
 
     response2 = test_app.get('/videos/1')
     assert response2.json['status'] == 'OK'
-    assert response2.json['data'] == [dict(id=1, title='title', thumbnail='thumbnail', position=1),
-                                      dict(id=4, title='title4',
-                                           thumbnail='thumbnail4', position=2),
-                                      dict(id=2, title='title2',
-                                           thumbnail='thumbnail2', position=3),
-                                      dict(id=3, title='title3', thumbnail='thumbnail3', position=4)]
+    assert response2.json['data'] == [dict(id=2, title='title2', thumbnail='thumbnail2', position=1),
+                                      dict(id=1, title='title', thumbnail='thumbnail', position=2)]
+
+
+def test_should_move_up_a_video_position():
+    populate_test_database()
+
+    create_playlist('first playlist')
+
+    create_video(1, 'title', 'thumbnail', 1)
+    create_video(1, 'title2', 'thumbnail2', 2)
+
+    response = test_app.put('/videos/2/1/1')
+    assert response.json['status'] == 'OK'
+
+    response2 = test_app.get('/videos/1')
+    assert response2.json['status'] == 'OK'
+    assert response2.json['data'] == [dict(id=2, title='title2', thumbnail='thumbnail2', position=1),
+                                      dict(id=1, title='title', thumbnail='thumbnail', position=2)]
 
 
 def test_should_delete_a_video_given_an_id_and_update_playlist_video_position():
@@ -294,7 +306,7 @@ def test_should_return_a_not_ok_status_when_either_specifying_an_out_of_bounds_o
     create_video(1, 'title', 'thumbnail', 1)
     create_video(1, 'title2', 'thumbnail2', 2)
 
-    response = test_app.put('/videos/1/1/2')
+    response = test_app.put('/videos/2/1/2')
     assert response.json['status'] == 'NOK'
     assert response.json['message'] != None
 

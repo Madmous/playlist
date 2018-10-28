@@ -49,14 +49,20 @@ def update_video_position(id, playlist_id, next_position, db):
 
     last_position = video_repository.retrieve_last_video_position(
         playlist_id, db)
-    if int(next_position, base=10) > last_position:
+    next_position = int(next_position, base=10)
+    if next_position > last_position:
         return HTTPResponse(status=200, body={'status': 'NOK', 'message': 'You can not update this video. The next position does not exist'})
 
-    if int(next_position, base=10) == last_position:
+    position = video['position']
+    if next_position == position:
         return HTTPResponse(status=200, body={'status': 'NOK', 'message': 'There is no need to update this video since the position is already the one specified'})
 
-    video_repository.update_video_position(
-        id, video['position'], next_position, db)
+    if position > next_position:
+        video_repository.move_up_video_position(
+            id, position, next_position, db)
+        return HTTPResponse(status=200, body={'status': 'OK'})
+
+    video_repository.drop_down_video_position(id, position, next_position, db)
     return HTTPResponse(status=200, body={'status': 'OK'})
 
 

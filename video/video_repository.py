@@ -42,8 +42,15 @@ def create_video(playlist_id, title, thumbnail, position, db):
 
 
 def update_video_positions(removed_position, db):
-    db.execute("UPDATE video SET position = position - 1 WHERE position > %s", (removed_position,))
+    db.execute(
+        "UPDATE video SET position = position - 1 WHERE position > %s", (removed_position,))
 
 
-def update_video_position(id, position, next_position, db):
-    db.execute("UPDATE video SET position = Case position When %s Then %s Else position + 1 End WHERE position BETWEEN %s AND %s;", (position, next_position, next_position, position))
+def move_up_video_position(id, position, next_position, db):
+    db.execute("UPDATE video SET position = Case position When %s Then %s Else position + 1 End WHERE position BETWEEN %s AND %s;",
+               (position, next_position, next_position, position))
+
+
+def drop_down_video_position(id, position, next_position, db):
+    db.execute("UPDATE video SET position = Case position When %s Then %s Else position - 1 End WHERE position BETWEEN %s AND %s;",
+               (position, next_position, position, next_position))
