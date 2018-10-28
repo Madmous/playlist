@@ -1,6 +1,4 @@
-# - Delete the playlist : delete videos
-
-# add updated column
+"""This module is the playlist repository in charge of all database requests."""
 
 
 def retrieve_playlists(db):

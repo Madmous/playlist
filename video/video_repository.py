@@ -1,10 +1,16 @@
-"""This module does blah blah."""
-# update video position ???
+"""This module is the video repository in charge of all database requests."""
 
 
-def retrieve_videos(playlist_id, db):
+def retrieve_videos_from_playlist(playlist_id, db):
     db.execute("SELECT id, title, thumbnail, position from video WHERE playlist_id={playlist_id} ORDER BY position ASC;".format(
         playlist_id=playlist_id))
+    rows = db.fetchall()
+    return rows
+
+
+def retrieve_videos(db):
+    db.execute(
+        "SELECT id, playlist_id, title, thumbnail, position from video ORDER BY playlist_id ASC, position ASC;")
     rows = db.fetchall()
     return rows
 
@@ -17,7 +23,8 @@ def retrieve_video(id, playlist_id, db):
 
 
 def retrieve_last_video_position(playlist_id, db):
-    db.execute("SELECT max(position) as position from video WHERE playlist_id={playlist_id};".format(playlist_id=playlist_id))
+    db.execute("SELECT max(position) as position from video WHERE playlist_id={playlist_id};".format(
+        playlist_id=playlist_id))
     row = db.fetchone()
     return row['position']
 

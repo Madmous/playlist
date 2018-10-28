@@ -1,5 +1,4 @@
-"""This module does blah blah."""
-
+"""This module handles playlist api calls."""
 from bottle import request, response, post, get, put, delete, HTTPResponse
 from playlist import playlist_repository
 from video import video_repository

@@ -1,10 +1,14 @@
-"""This module does blah blah."""
+"""This module handles video api calls."""
 import MySQLdb
 
 from json import dumps
 from bottle import request, response, post, get, put, delete, HTTPResponse
 from video import video_repository
 from playlist import playlist_repository
+
+from logging import getLogger
+
+logger = getLogger()
 
 
 @post('/videos/<playlist_id>/<title>/<thumbnail>')
@@ -23,7 +27,15 @@ def create_video(playlist_id, title, thumbnail, db):
 
 @get('/videos/<playlist_id>')
 def retrieve_videos(playlist_id, db):
-    rows = video_repository.retrieve_videos(playlist_id, db)
+    rows = video_repository.retrieve_videos_from_playlist(playlist_id, db)
+    return HTTPResponse(
+        status=200,
+        body={'status': 'OK', 'data': rows})
+
+
+@get('/videos')
+def retrieve_videos(db):
+    rows = video_repository.retrieve_videos(db)
     return HTTPResponse(
         status=200,
         body={'status': 'OK', 'data': rows})
