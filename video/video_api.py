@@ -1,14 +1,7 @@
 """This module handles video api calls."""
-import MySQLdb
-
-from json import dumps
-from bottle import request, response, post, get, put, delete, HTTPResponse
+from bottle import post, get, put, delete, HTTPResponse
 from video import video_repository
 from playlist import playlist_repository
-
-from logging import getLogger
-
-logger = getLogger()
 
 
 @post('/videos/<playlist_id>/<title>/<thumbnail>')

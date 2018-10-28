@@ -91,3 +91,4 @@ curl -X DELETE \http://localhost:8080/videos/1/1
 - Handle 500 errors due to Database IOs (try catch)
 - Authentication
 - Query params
+- Improve function docstring

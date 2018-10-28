@@ -1,6 +1,5 @@
 """This module does blah blah."""
 import os
-import MySQLdb
 
 from bottle_mysql import Plugin
 from bottle import default_app
